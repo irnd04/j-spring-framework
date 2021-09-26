@@ -1,0 +1,12 @@
+package j.spring.framework.core.web.server.error;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public interface HttpErrorHandler {
+
+    void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+
+}

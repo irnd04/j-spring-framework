@@ -1,0 +1,5 @@
+rootProject.name = 'j-spring-framework'
+include 'j-spring-framework-core'
+include 'j-spring-framework-app'
+include 'j-spring-framework-support'
+
