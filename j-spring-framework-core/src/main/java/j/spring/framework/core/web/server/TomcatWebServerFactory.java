@@ -3,11 +3,9 @@ package j.spring.framework.core.web.server;
 import j.spring.framework.core.ioc.ApplicationContext;
 import j.spring.framework.core.ioc.ComponentFactory;
 import j.spring.framework.core.ioc.ComponentScanner;
-import j.spring.framework.core.web.server.error.HttpErrorHandler;
+import j.spring.framework.core.web.servlet.DefaultServletContextInitializer;
 import j.spring.framework.core.web.servlet.ErrorHandleServlet;
 import j.spring.framework.core.web.servlet.WebResourceInitializer;
-import j.spring.framework.core.web.servlet.DefaultServletContextInitializer;
-import org.apache.catalina.Context;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.descriptor.web.ErrorPage;
@@ -31,22 +29,10 @@ public class TomcatWebServerFactory {
         this.applicationContext = new ComponentFactory(scanner.scan());
     }
 
-    public TomcatWebServer getWebServer() {
+    public TomcatWebServer createWebServer() {
         Tomcat tomcat = new Tomcat();
         prepareContext(tomcat);
         return new TomcatWebServer(tomcat);
-    }
-
-    private void initHttpErrorHandler(Context context) {
-        HttpErrorHandler httpErrorHandler = applicationContext.findOne(HttpErrorHandler.class);
-        if (httpErrorHandler != null) {
-            Tomcat.addServlet(context, ErrorHandleServlet.NAME, new ErrorHandleServlet(httpErrorHandler));
-            context.addServletMappingDecoded(ErrorHandleServlet.LOCATION, ErrorHandleServlet.NAME);
-            ErrorPage errorPage = new ErrorPage();
-            errorPage.setLocation(ErrorHandleServlet.LOCATION);
-            context.addErrorPage(errorPage);
-            logger.debug("{} http error handler added..", httpErrorHandler.getClass().getName());
-        }
     }
 
     private void prepareContext(Tomcat tomcat) {
@@ -60,16 +46,12 @@ public class TomcatWebServerFactory {
         tomcat.getHost().addChild(context);
         context.addServletContainerInitializer(
                 new TomcatStarter(new DefaultServletContextInitializer(applicationContext)), Collections.emptySet());
-
-        initHttpErrorHandler(context);
-        new WebResourceInitializer(context, primarySource).initialize();
+        ErrorPage errorPage = new ErrorPage();
+        errorPage.setLocation(ErrorHandleServlet.LOCATION);
+        context.addErrorPage(errorPage);
+        WebResourceInitializer.initialize(context, primarySource);
     }
 
-    /**
-     * Return the absolute temp dir for given web server.
-     * @param prefix server name
-     * @return The temp dir for given server.
-     */
     private File createTempDir(String prefix, int port) {
         try {
             File tempDir = File.createTempFile(prefix + ".", "." + port);

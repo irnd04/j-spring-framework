@@ -12,10 +12,9 @@ public class TomcatWebServer {
 
     public TomcatWebServer(Tomcat tomcat) {
         this.tomcat = tomcat;
-        initialize();
     }
 
-    private void initialize() {
+    public void start() {
         try {
             this.tomcat.start();
             Thread awaitThread = new Thread("container") {
@@ -30,9 +29,6 @@ public class TomcatWebServer {
         } catch (Exception ex) {
             throw new WebServerException("Unable to start embedded Tomcat", ex);
         }
-    }
-
-    public void start() {
         logger.info("Tomcat started on port(s): " + tomcat.getConnector().getPort());
     }
 
@@ -41,8 +37,6 @@ public class TomcatWebServer {
             logger.info("Tomcat stopped on port(s): " + tomcat.getConnector().getPort());
             this.tomcat.stop();
             this.tomcat.destroy();
-        } catch (LifecycleException ex) {
-            // swallow and continue
-        }
+        } catch (LifecycleException ignored) { }
     }
 }

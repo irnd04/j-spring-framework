@@ -2,12 +2,12 @@ package j.spring.framework.core;
 
 import j.spring.framework.core.web.servlet.ServletWebServerApplicationContext;
 
-public class Application {
+public class JSpringApplication {
 
     private final Class<?> primarySource;
     private ServletWebServerApplicationContext context;
 
-    public Application(Class<?> primarySource) {
+    private JSpringApplication(Class<?> primarySource) {
         this.primarySource = primarySource;
     }
 
@@ -17,6 +17,6 @@ public class Application {
     }
 
     public static void run(Class<?> primarySource, String... args) {
-        new Application(primarySource).run(args);
+        new JSpringApplication(primarySource).run(args);
     }
 }

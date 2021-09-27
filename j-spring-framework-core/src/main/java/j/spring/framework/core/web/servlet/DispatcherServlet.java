@@ -27,6 +27,8 @@ public class DispatcherServlet extends HttpServlet {
     private final List<HandlerAdapter> handlerAdapters;
     private final ExceptionHandlerManager exceptionHandlerManager;
 
+    public static final String NAME = "dispatcherServlet";
+
     public DispatcherServlet(ApplicationContext applicationContext) {
         this.handlerMappings = createHandlerMappings(applicationContext);
         this.handlerAdapters = createHandlerAdapters(applicationContext);

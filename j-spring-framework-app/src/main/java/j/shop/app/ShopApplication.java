@@ -1,9 +1,9 @@
 package j.shop.app;
 
-import j.spring.framework.core.Application;
+import j.spring.framework.core.JSpringApplication;
 
 public class ShopApplication {
     public static void main(String[] args) {
-        Application.run(ShopApplication.class, args);
+        JSpringApplication.run(ShopApplication.class, args);
     }
 }

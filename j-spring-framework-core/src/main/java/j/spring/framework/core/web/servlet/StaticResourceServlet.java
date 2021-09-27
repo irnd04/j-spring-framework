@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 public class StaticResourceServlet extends DefaultServlet {
 
     private final String prefix;
+    public static final String NAME = "staticResourceServlet";;
 
     public StaticResourceServlet(String prefix) {
         this.prefix = prefix;

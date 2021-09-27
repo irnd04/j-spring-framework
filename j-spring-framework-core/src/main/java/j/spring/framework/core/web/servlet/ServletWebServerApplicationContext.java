@@ -1,13 +1,12 @@
 package j.spring.framework.core.web.servlet;
 
-import j.spring.framework.core.web.lifecycle.LifeCycle;
-import j.spring.framework.core.web.lifecycle.LifeCycleEventBus;
+import j.spring.framework.core.web.server.lifecycle.LifeCycle;
+import j.spring.framework.core.web.server.lifecycle.LifeCycleEventBus;
 import j.spring.framework.core.web.server.TomcatWebServer;
 import j.spring.framework.core.web.server.TomcatWebServerFactory;
 
 public class ServletWebServerApplicationContext {
 
-    private TomcatWebServer webServer;
     private final Class<?> primarySource;
 
     public ServletWebServerApplicationContext(Class<?> primarySource) {
@@ -15,23 +14,14 @@ public class ServletWebServerApplicationContext {
     }
 
     public void refresh() {
-        createWebServer();
-        registerShutdownHandler();
-        start();
+        TomcatWebServerFactory tomcatWebServerFactory = new TomcatWebServerFactory(primarySource);
+        TomcatWebServer webServer = tomcatWebServerFactory.createWebServer();
+        registerShutdownHandler(webServer);
+        webServer.start();
         LifeCycleEventBus.send(LifeCycle.AFTER_START);
     }
 
-    private void registerShutdownHandler() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> webServer.stop()));
+    private void registerShutdownHandler(TomcatWebServer webServer) {
+        Runtime.getRuntime().addShutdownHook(new Thread(webServer::stop));
     }
-
-    private void start() {
-        this.webServer.start();
-    }
-
-    private void createWebServer() {
-        TomcatWebServerFactory tomcatWebServerFactory = new TomcatWebServerFactory(primarySource);
-        this.webServer = tomcatWebServerFactory.getWebServer();
-    }
-
 }

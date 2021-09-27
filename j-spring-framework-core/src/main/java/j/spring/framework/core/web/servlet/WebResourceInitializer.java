@@ -99,12 +99,12 @@ public final class WebResourceInitializer {
     private final Context context;
     private final Class<?> primarySource;
 
-    public WebResourceInitializer(Context context, Class<?> primarySource) {
+    private WebResourceInitializer(Context context, Class<?> primarySource) {
         this.context = context;
         this.primarySource = primarySource;
     }
 
-    public void initialize() {
+    private void initialize() {
 
         WebResourceRoot resources = new StandardRoot(context);
 
@@ -131,5 +131,9 @@ public final class WebResourceInitializer {
         }
 
         context.setResources(resources);
+    }
+
+    public static void initialize(Context context, Class<?> primarySource) {
+        new WebResourceInitializer(context, primarySource).initialize();
     }
 }

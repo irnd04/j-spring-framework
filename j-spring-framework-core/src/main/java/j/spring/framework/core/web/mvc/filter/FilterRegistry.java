@@ -10,21 +10,18 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import java.util.List;
 
-public class FilterInitializer {
-
-    private final static Logger logger = LoggerFactory.getLogger(FilterInitializer.class);
-
-    private final List<Filter> filters;
+public class FilterRegistry {
+    private final static Logger logger = LoggerFactory.getLogger(FilterRegistry.class);
     private final ServletContext context;
 
-    public FilterInitializer(ApplicationContext applicationContext, ServletContext servletContext) {
-        List<Filter> filters = applicationContext.find(Filter.class);
-        filters.add(new CharacterEncodingFilter());
-        this.filters = OrderAnnotationUtils.ordered(filters);
+    public FilterRegistry(ServletContext servletContext) {
         this.context = servletContext;
     }
 
-    public void initialize() {
+    public void register(ApplicationContext applicationContext) {
+        List<Filter> filters = applicationContext.find(Filter.class);
+        filters.add(new CharacterEncodingFilter());
+        filters = OrderAnnotationUtils.ordered(filters);
         for (Filter filter : filters) {
             FilterRegistration.Dynamic filterRegistration = context.addFilter(filter.getClass().getName(), filter);
             filterRegistration.addMappingForUrlPatterns(null, false, "/*");

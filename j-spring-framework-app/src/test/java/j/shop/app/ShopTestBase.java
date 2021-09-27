@@ -8,7 +8,7 @@ import j.shop.app.web.ShopResponse;
 import j.spring.framework.core.ioc.ApplicationContext;
 import j.spring.framework.core.ioc.ComponentFactory;
 import j.spring.framework.core.ioc.ComponentScanner;
-import j.spring.framework.core.web.lifecycle.LifeCycleEventBus;
+import j.spring.framework.core.web.server.lifecycle.LifeCycleEventBus;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;

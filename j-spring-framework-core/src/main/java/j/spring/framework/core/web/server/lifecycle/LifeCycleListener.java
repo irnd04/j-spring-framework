@@ -1,6 +1,4 @@
-package j.spring.framework.core.web.lifecycle;
-
-import org.apache.catalina.Lifecycle;
+package j.spring.framework.core.web.server.lifecycle;
 
 @FunctionalInterface
 public interface LifeCycleListener {
